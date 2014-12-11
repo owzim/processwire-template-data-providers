@@ -31,7 +31,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
      */
     protected $controllersPath = null;
 
-    
+
     public function __construct() {}
 
     /**
@@ -115,7 +115,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
      * @see http://processwire.com/apigen/class-Module.html
      */
     public function init() {
-        
+
         // Extracts the data providers path from the module config and
         // stores it in wire('config')->paths->dataproviders.
         $relativePath = $this->get('data_providers_path');
@@ -124,7 +124,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         // add data providers path to wire config
         wire('config')->paths->dataproviders = realpath(wire('config')->paths->templates .
                                                         DIRECTORY_SEPARATOR . $relativePath);
-        
+
         // register \nw autoloader
         require_once(wire('config')->paths->TemplateDataProviders . '/nw/Autoloader.php');
         spl_autoload_register(array('\nw\Autoloader', 'autoload'));
@@ -156,7 +156,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         // return if no page data provider defined for given page
         if (is_null($dataProvider)) return;
         $dataProvider->populate();
-        $event->replace=true; 
+        $event->replace=true;
     }
 
     /**
@@ -181,6 +181,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         $context = array_slice($event->arguments(), 1, null, false);
 
         $dataProvider = \nw\DataProviders\Factory::get($chunkFile);
+        $dataProvider->page = $event->object;
         $dataProvider->setContext($context);
         $dataProvider->populate();
 
