@@ -23,7 +23,8 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
      * @field array Default config values
      */
     protected static $defaults = array(
-        'data_providers_path' => 'dataproviders'
+        'data_providers_path' => 'dataproviders',
+        'chunk_data_providers_path' => 'dataproviders',
     );
 
     /**
@@ -94,6 +95,14 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
 
         $fields->append($field);
 
+        $field = $modules->get('InputfieldText');
+        $field->label = __('Path to chunk data providers classes (wire(\'config\')->paths->templates)');
+        $field->attr('name', 'chunk_data_providers_path');
+        $field->attr('size', 30);
+        $field->attr('value', $data['chunk_data_providers_path']);
+
+        $fields->append($field);
+
         return $fields;
     }
 
@@ -121,12 +130,20 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         $relativePath = $this->get('data_providers_path');
         if (empty($relativePath)) $relativePath = self::$defaults['data_providers_path'];
 
+        // Extracts the chunk data providers path from the module config and
+        // stores it in wire('config')->paths->chunkDataproviders.
+        $relativeChunksPath = $this->get('chunk_data_providers_path');
+        if (empty($relativeChunksPath)) $relativeChunksPath = self::$defaults['chunk_data_providers_path'];
+
+
+        $tplPath = $this->config->paths->templates;
         // add data providers path to wire config
-        wire('config')->paths->dataproviders = realpath(wire('config')->paths->templates .
-                                                        DIRECTORY_SEPARATOR . $relativePath);
+        $this->config->paths->dataproviders = $tplPath . $relativePath;
+        // add chunk data providers path to wire config
+        $this->config->paths->chunkDataproviders = $tplPath . $relativeChunksPath;
 
         // register \nw autoloader
-        require_once(wire('config')->paths->TemplateDataProviders . '/nw/Autoloader.php');
+        require_once($this->config->paths->TemplateDataProviders . '/nw/Autoloader.php');
         spl_autoload_register(array('\nw\Autoloader', 'autoload'));
 
         // add hooks

@@ -60,7 +60,7 @@ class Factory {
                 // search for data provider based on filename of chunk
                 $className = self::getDataProviderClass(basename($subject, '.' . wire('config')->templateExtension), 'Chunk');
 
-                $classFile = wire('config')->paths->dataproviders . DIRECTORY_SEPARATOR . $className . '.php';
+                $classFile = wire('config')->paths->chunkDataproviders . DIRECTORY_SEPARATOR . $className . '.php';
 
                 // create generic chunk data provider
                 if (!is_file($classFile)) return new ChunkDataProvider($subject);
