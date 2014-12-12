@@ -23,8 +23,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
      * @field array Default config values
      */
     protected static $defaults = array(
-        'data_providers_path' => 'dataproviders',
-        'chunk_data_providers_path' => 'dataproviders',
+        'data_providers_path' => 'dataproviders'
     );
 
     /**
@@ -133,7 +132,7 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         // Extracts the chunk data providers path from the module config and
         // stores it in wire('config')->paths->chunkDataproviders.
         $relativeChunksPath = $this->get('chunk_data_providers_path');
-        if (empty($relativeChunksPath)) $relativeChunksPath = self::$defaults['chunk_data_providers_path'];
+        if (empty($relativeChunksPath)) $relativeChunksPath = $relativePath;
 
 
         $tplPath = $this->config->paths->templates;
