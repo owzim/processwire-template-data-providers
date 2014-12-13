@@ -98,6 +98,10 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         $field->label = __('Path to chunk data providers classes (wire(\'config\')->paths->templates)');
         $field->attr('name', 'chunk_data_providers_path');
         $field->attr('size', 30);
+
+        if (!isset($data['chunk_data_providers_path'])) {
+            $data['chunk_data_providers_path'] = $data['data_providers_path'];
+        }
         $field->attr('value', $data['chunk_data_providers_path']);
 
         $fields->append($field);
