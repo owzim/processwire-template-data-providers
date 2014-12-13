@@ -23,7 +23,9 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
      * @field array Default config values
      */
     protected static $defaults = array(
-        'data_providers_path' => 'dataproviders'
+        'data_providers_path' => 'dataproviders',
+        'default_data_provider' => '',
+        'default_chunk_data_provider' => '',
     );
 
     /**
@@ -87,7 +89,9 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         $modules = wire('modules');
 
         $field = $modules->get('InputfieldText');
-        $field->label = __('Path to data providers classes (wire(\'config\')->paths->templates)');
+        $field->label = __('Path to data providers classes');
+        $field->description = __('relative to **wire(\'config\')->paths->templates**');
+        $field->columnWidth = 50;
         $field->attr('name', 'data_providers_path');
         $field->attr('size', 30);
         $field->attr('value', $data['data_providers_path']);
@@ -95,7 +99,21 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
         $fields->append($field);
 
         $field = $modules->get('InputfieldText');
-        $field->label = __('Path to chunk data providers classes (wire(\'config\')->paths->templates)');
+        $field->label = __('Path to the default data providers class');
+        $field->description = __('relative to data providers path');
+        $field->notes = __('If not set, \'PageDataProvider\' class is used');
+        $field->columnWidth = 50;
+        $field->attr('name', 'default_data_provider');
+        $field->attr('size', 30);
+        $field->attr('value', $data['default_data_provider']);
+
+        $fields->append($field);
+
+
+        $field = $modules->get('InputfieldText');
+        $field->label = __('Path to chunk data providers classes');
+        $field->description = __('relative to **wire(\'config\')->paths->templates**');
+        $field->columnWidth = 50;
         $field->attr('name', 'chunk_data_providers_path');
         $field->attr('size', 30);
 
@@ -103,6 +121,17 @@ class TemplateDataProviders extends WireData implements Module, ConfigurableModu
             $data['chunk_data_providers_path'] = $data['data_providers_path'];
         }
         $field->attr('value', $data['chunk_data_providers_path']);
+
+        $fields->append($field);
+
+        $field = $modules->get('InputfieldText');
+        $field->label = __('Path to the default chunk data providers class');
+        $field->description = __('relative to data providers path');
+        $field->notes = __('If not set, "ChunkDataProvider" class is used');
+        $field->columnWidth = 50;
+        $field->attr('name', 'default_chunk_data_provider');
+        $field->attr('size', 30);
+        $field->attr('value', $data['default_chunk_data_provider']);
 
         $fields->append($field);
 

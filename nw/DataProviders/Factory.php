@@ -41,7 +41,7 @@ class Factory {
                 $className = self::getDataProviderClass($subject->template->name, 'Page');
                 $classFile = wire('config')->paths->dataproviders . DIRECTORY_SEPARATOR . $className . '.php';
 
-                if (!is_file($classFile)) return null;
+                if (!is_file($classFile)) return self::getDefaultDataProvider($subject);
 
                 // load concrete data provider lib
                 require_once($classFile);
@@ -63,7 +63,7 @@ class Factory {
                 $classFile = wire('config')->paths->chunkDataproviders . DIRECTORY_SEPARATOR . $className . '.php';
 
                 // create generic chunk data provider
-                if (!is_file($classFile)) return new ChunkDataProvider($subject);
+                if (!is_file($classFile)) return self::getDefaultChunkDataProvider($subject);
 
                 // load concrete data provider lib
                 require_once($classFile);
@@ -106,5 +106,14 @@ class Factory {
 
         $baseName = str_replace(' ', '', ucwords(str_replace(array('_', '-'), ' ', strtolower($baseName))));
         return $baseName . $suffix;
+    }
+
+
+    protected static function getDefaultChunkDataProvider($subject) {
+        return new ChunkDataProvider($subject);
+    }
+
+    protected static function getDefaultDataProvider($subject) {
+        return null;
     }
 }
