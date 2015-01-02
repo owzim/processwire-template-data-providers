@@ -27,12 +27,14 @@ class ChunkRenderer extends \Wire {
     public function ___render(ChunkDataProvider $dataProvider) {
 
         $chunkFile = $dataProvider->getChunk();
-        $chunkPath = "{$this->config->paths->templates}$chunkFile";
+        $chunkPath = $this->config->paths->templates . $chunkFile;
 
-        $tplFile = new \TemplateFile($chunkPath);
-        // TemplateFile also extracts all fuel objects atuomatically
-        $tplFile->setArray($dataProvider->getArray());
+        ob_start();
+        extract(array_merge($this->fuel->getArray(), $dataProvider->getArray()));
+        include $chunkPath;
+        $out = ob_get_contents();
+        ob_end_clean();
 
-        return $tplFile->render();
+        return $out;
     }
 }
